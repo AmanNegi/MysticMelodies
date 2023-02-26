@@ -2,6 +2,10 @@
 
 ![](/screenshots/banner.png)
 > Watch the demo video [here](https://youtu.be/j7Dslmie_4s)
+
+## Preview
+![](/screenshots/demo.gif)
+
 ## Inspiration
 I noticed that, with the abundance of popular Western music, it could be difficult for young people to find their own cultures' rich and diverse musical traditions. This can result in a lack of awareness and appreciation for traditional music. Thus, I wanted to create an application that contains a list of traditional music across India.
 

@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+
+import 'package:mysticmelodies/models/item_model.dart';
+import 'package:mysticmelodies/models/song_item.dart';
 
 List<String> images = [
   "assets/uttarakhand.png",
@@ -39,133 +41,51 @@ List<String> subTitles = [
 
 List<ItemModel> items = [
   ItemModel(
-    subTitle: subTitles[0],
-    name: titles[0],
-    image: images[0],
-    description: descriptions[0],
-    relLink: "",
-  ),
-  ItemModel(
+    id: "1",
     subTitle: subTitles[1],
     name: titles[1],
     image: images[1],
     description: descriptions[1],
-    relLink: "",
+    songs: getSongList("assamese"),
   ),
   ItemModel(
+    id: "2",
     subTitle: subTitles[2],
     name: titles[2],
     image: images[2],
     description: descriptions[2],
-    relLink: "",
+    songs: getSongList("abc"),
   ),
   ItemModel(
+    id: "3",
     subTitle: subTitles[3],
     name: titles[3],
     image: images[3],
     description: descriptions[3],
-    relLink: "",
+    songs: getSongList("abc"),
   ),
   ItemModel(
+    id: "0",
+    subTitle: subTitles[0],
+    name: titles[0],
+    image: images[0],
+    description: descriptions[0],
+    songs: getSongList("garhwali"),
+  ),
+  ItemModel(
+    id: "4",
     subTitle: subTitles[4],
     name: titles[4],
     image: images[4],
     description: descriptions[4],
-    relLink: "",
+    songs: getSongList("abc"),
   ),
   ItemModel(
+    id: "5",
     subTitle: subTitles[5],
     name: titles[5],
     image: images[5],
     description: descriptions[5],
-    relLink: "",
+    songs: getSongList("abc"),
   ),
 ];
-
-_getAllSongs(String name){
-  //TODO: Return by name
-
-}
-
-class ItemModel {
-  final String name;
-  final String image;
-  final String description;
-  final String relLink;
-
-  final String subTitle;
-
-  ItemModel({
-    required this.name,
-    required this.image,
-    required this.description,
-    required this.relLink,
-    required this.subTitle,
-  });
-
-  ItemModel copyWith({
-    String? name,
-    String? image,
-    String? description,
-    String? relLink,
-    String? subTitle,
-  }) {
-    return ItemModel(
-      name: name ?? this.name,
-      image: image ?? this.image,
-      description: description ?? this.description,
-      relLink: relLink ?? this.relLink,
-      subTitle: subTitle ?? this.subTitle,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': name,
-      'image': image,
-      'description': description,
-      'relLink': relLink,
-      'subTitle': subTitle,
-    };
-  }
-
-  factory ItemModel.fromMap(Map<String, dynamic> map) {
-    return ItemModel(
-      name: map['name'] as String,
-      image: map['image'] as String,
-      description: map['description'] as String,
-      relLink: map['relLink'] as String,
-      subTitle: map['subTitle'] as String,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ItemModel.fromJson(String source) =>
-      ItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'ItemModel(name: $name, image: $image, description: $description, relLink: $relLink, subTitle: $subTitle)';
-  }
-
-  @override
-  bool operator ==(covariant ItemModel other) {
-    if (identical(this, other)) return true;
-
-    return other.name == name &&
-        other.image == image &&
-        other.description == description &&
-        other.relLink == relLink &&
-        other.subTitle == subTitle;
-  }
-
-  @override
-  int get hashCode {
-    return name.hashCode ^
-        image.hashCode ^
-        description.hashCode ^
-        relLink.hashCode ^
-        subTitle.hashCode;
-  }
-}

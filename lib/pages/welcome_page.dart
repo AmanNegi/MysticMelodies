@@ -13,15 +13,22 @@ class WelcomePage extends StatefulHookWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  late AnimationController controller;
+  late AnimationController startAnimationController;
+  late AnimationController endAnimationController;
   late Animation positionAnimation;
   late Animation buttonAnimation;
 
-  @override
-  Widget build(BuildContext context) {
-    controller = useAnimationController(
+  _setupAnimations() {
+    // Setting up controllers
+    startAnimationController = useAnimationController(
       duration: const Duration(seconds: 2),
     );
+
+    endAnimationController = useAnimationController(
+      duration: const Duration(seconds: 4),
+    );
+
+    // Setting up animations for starting
     positionAnimation = Tween<double>(
       begin: -0.5 * getWidth(context),
       end: 15,
@@ -33,7 +40,7 @@ class _WelcomePageState extends State<WelcomePage> {
           curve: Curves.fastLinearToSlowEaseIn,
         ),
         // curve: Curves.fastLinearToSlowEaseIn,
-        parent: controller,
+        parent: startAnimationController,
       ),
     );
     buttonAnimation = Tween<double>(
@@ -47,20 +54,18 @@ class _WelcomePageState extends State<WelcomePage> {
           curve: Curves.fastLinearToSlowEaseIn,
         ),
         // curve: Curves.fastLinearToSlowEaseIn,
-        parent: controller,
+        parent: startAnimationController,
       ),
     );
 
-    controller.forward();
+    // Setting up animations for ending
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _setupAnimations();
+    startAnimationController.forward();
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          controller.reset();
-          await Future.delayed(const Duration(seconds: 1));
-          controller.forward();
-        },
-      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -87,10 +92,10 @@ class _WelcomePageState extends State<WelcomePage> {
             animation: positionAnimation,
             builder: (context, child) {
               return Positioned(
-                bottom: 0.1 * getHeight(context),
+                bottom: 0.125 * getHeight(context),
                 left: positionAnimation.value,
                 child: Opacity(
-                  opacity: min(controller.value * 2, 1),
+                  opacity: min(startAnimationController.value * 2, 1),
                   child: child ?? Container(),
                 ),
               );
@@ -105,14 +110,14 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
           Positioned(
-            bottom: 0.075 * getHeight(context),
+            bottom: 0.1 * getHeight(context),
             left: 15,
             right: 15,
             child: AnimatedBuilder(
-                animation: controller,
+                animation: startAnimationController,
                 builder: (context, child) {
                   return Opacity(
-                    opacity: min(controller.value * 2, 1),
+                    opacity: min(startAnimationController.value * 2, 1),
                     child: Text(
                       "Experience the timeless melodies of India",
                       style: TextStyle(
@@ -127,24 +132,60 @@ class _WelcomePageState extends State<WelcomePage> {
             animation: buttonAnimation,
             builder: (context, child) {
               return Positioned(
-                bottom: 10,
+                bottom: 15,
                 right: buttonAnimation.value,
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 20),
-                  opacity: controller.value,
+                  opacity: startAnimationController.value,
                   child: child ?? Container(),
                 ),
               );
             },
             child: ElevatedButton(
-              onPressed: () {
-                goToPage(context, const HomePage());
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(accentColor)),
+              onPressed: () async {
+                await startAnimationController.reverse();
+                // await Future.delayed(const Duration(seconds: 1));
+                Navigator.push(context, FadeRoute(page: const HomePage()));
+                // goToPage(context, const HomePage());
               },
-              child: const Text("Get started"),
+              child: const Text(
+                "Get started",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+class FadeRoute extends PageRouteBuilder {
+  final Widget page;
+  FadeRoute({required this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+
+          transitionDuration: const Duration(seconds: 1),
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
 }
